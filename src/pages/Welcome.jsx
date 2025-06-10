@@ -1,10 +1,13 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
 export default function Welcome() {
   return (
     <>
         <h4>Welcome page</h4>
-        {/* sign in and sign up option */}
+        <NavLink to={'/sign_up'}>Sign Up</NavLink>
+        <br></br>
+        <NavLink to={'/sign_in'}>Sign In</NavLink>
     </>
   )
 }

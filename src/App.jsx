@@ -14,7 +14,7 @@ import Search_product from "./pages/product/Search_product";
 function App() {
 
   return (
-    <>
+    <div className="app">
       <Routes>
           <Route path = "/" element = {<Welcome />} />
           <Route path = "/sign_up" element = {<Sign_up />} />
@@ -30,7 +30,7 @@ function App() {
           <Route path = "/deleteProd" element = {<Delete_product />} />
           <Route path = "/searchProd" element = {<Search_product />} />
       </Routes>
-    </>
+    </div>
   )
 }
 

@@ -1,0 +1,33 @@
+/* ---------- Layout helpers ---------- */
+
+/* centred page wrapper */
+.container{
+    width:min(90%,1280px);
+    margin-inline:auto;
+  }
+  
+  /* responsive product grid */
+  .products-grid{
+    display:grid;
+    gap:1.5rem;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  }
+  
+  /* generic flex shortcuts */
+  .flex{display:flex;align-items:center}
+  .flex-between{display:flex;justify-content:space-between;align-items:center}
+  
+  /* hide elements on small screens */
+  @media (max-width:640px){
+    .hide-sm{display:none}
+  }
+  
+  /* optional sidebar layout for admin pages */
+  @media (min-width:1024px){
+    .sidebar-layout{
+      display:grid;
+      grid-template-columns:240px 1fr;
+      gap:2rem;
+    }
+  }
+  

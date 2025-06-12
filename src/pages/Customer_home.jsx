@@ -3,10 +3,9 @@ import ProductCard from "../components/ProductCard";
 
 export default function Customer_home() {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading]   = useState(true);
-  const [error, setError]       = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  /* fetch catalogue once */
   useEffect(() => {
     (async () => {
       try {
@@ -21,29 +20,39 @@ export default function Customer_home() {
     })();
   }, []);
 
-  /* add-to-cart handler */
-  async function handleAddToCart(product) {
+  async function handleAddToCart(product, qty) {
+    const username = localStorage.getItem("username");
+    if (!username) {
+      alert("Please sign in first");
+      return;
+    }
+
     try {
-      await fetch("http://localhost:8080/addToCart", {
+      const resp = await fetch("http://localhost:8080/addToCart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product.id, qty: 1 }),
+        body: JSON.stringify({
+          productId: product.id,
+          username,
+          quantity: qty
+        })
       });
-      alert(`Added “${product.name}” to cart`);
+
+      if (resp.ok) alert(`Added \"${product.name}\" (x${qty}) to cart`);
+      else alert("Could not add to cart");
     } catch (err) {
       console.error(err);
       alert("Could not add to cart");
     }
   }
 
-  /* ------------------------------------------------------------------ */
   return (
     <div className="customer-home container mt-6">
       <h1 className="text-center mb-4">Welcome to Sales-Savvy</h1>
       <h2 className="text-center mb-6">Available Products</h2>
 
       {loading && <p className="text-center">Loading…</p>}
-      {error   && <p className="text-center">{error}</p>}
+      {error && <p className="text-center">{error}</p>}
 
       {!loading && !error && (
         products.length ? (
@@ -56,9 +65,7 @@ export default function Customer_home() {
               />
             ))}
           </div>
-        ) : (
-          <p className="text-center">No products available</p>
-        )
+        ) : <p className="text-center">No products available</p>
       )}
     </div>
   );

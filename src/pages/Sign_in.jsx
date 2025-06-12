@@ -13,19 +13,26 @@ export default function Sign_in() {
 
     try {
       const resp = await fetch("http://localhost:8080/signIn", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "text/plain" 
+      },
+      body: JSON.stringify(data),
+    });
 
-      const msg = await resp.text();
 
-      if (msg === "admin") navigate("/admin_home");
-      else if (msg === "customer") navigate("/customer_home");
-      else alert(msg);
+      const msg = await resp.text(); // This will be "admin", "customer", or an error message
+
+      if (msg === "admin" || msg === "customer") {
+        localStorage.setItem("username", username); // Username is already known from input
+        navigate(`/${msg}_home`);
+      } else {
+        alert(msg); // show error message like "wrong password"
+      }
     } catch (err) {
-      console.error(err);
-      alert("Failed to sign in");
+      console.error("Login error:", err);
+      alert("Could not sign in");
     }
   }
 

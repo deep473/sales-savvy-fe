@@ -1,34 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 
-/**
- * Horizontal product card.
- * Expects a `product` object with:
- * { id, name, price, category, description, imageUrl }
- */
 export default function ProductCard({ product, onAddToCart }) {
+  const [qty, setQty] = useState(1);
+
   return (
     <div className="product-card">
-      <div className="product-img-wrap">
-        {/* Fallback image if none provided */}
-        <img
-          src={product.imageUrl || "/placeholder.png"}
-          alt={product.name}
-          loading="lazy"
-        />
-      </div>
-
-      <div className="product-info">
-        <h3 className="product-title">{product.name}</h3>
-        <p className="product-price">₹{product.price}</p>
-        <p className="product-desc">{product.description}</p>
-
-        <button
-          className="btn btn-primary btn-sm"
-          onClick={() => onAddToCart(product)}
-        >
-          Add to cart
+      <img
+        src={product.photo}
+        alt={product.name}
+        onError={(e) => { e.target.src = "/default.png"; }}
+        className="product-img"
+      />
+      <h3>{product.name}</h3>
+      <p>₹{product.price}</p>
+      <div className="qty-control">
+        <button onClick={() => setQty(q => Math.max(1, q - 1))}>
+          -
         </button>
+        <span>{qty}</span>
+        <button onClick={() => setQty(q => q + 1)}>+</button>
       </div>
+      <button onClick={() => onAddToCart(product, qty)}>
+        Add to Cart
+      </button>
     </div>
   );
 }

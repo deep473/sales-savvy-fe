@@ -1,58 +1,71 @@
 import React, { useEffect, useState } from "react";
 
 export default function Cart() {
-  const [items, setItems] = useState([]);
-  const [total, setTotal] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading]     = useState(true);
+  const [error, setError]         = useState("");
+
+  const username = localStorage.getItem("username");
 
   useEffect(() => {
-    const username = localStorage.getItem("username");
-    fetch(`http://localhost:8080/getCart/${username}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setItems(data);
-        const grandTotal = data.reduce((sum, item) => {
-          return sum + item.product.price * item.quantity;
-        }, 0);
-        setTotal(grandTotal);
-      });
-  }, []);
+    if (!username) return;
+
+    (async () => {
+      try {
+        const res = await fetch(`http://localhost:8080/getCart/${username}`);
+        if (!res.ok) throw new Error("Failed to fetch cart");
+        const data = await res.json();
+        setCartItems(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [username]);
+
+  const totalAmount = cartItems.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0
+  );
 
   return (
-    <div className="container cart-page">
-      <h2 className="text-center mb-4">🛒 Your Cart</h2>
+    <div className="container mt-6 cart-view">
+      <h2 className="text-center mb-4">🛒 Your Shopping Cart</h2>
 
-      {items.length === 0 ? (
+      {loading && <p className="text-center">Loading...</p>}
+      {error && <p className="text-center text-danger">{error}</p>}
+
+      {!loading && !error && cartItems.length === 0 && (
         <p className="text-center">Your cart is empty.</p>
-      ) : (
-        <table className="cart-table">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Unit Price</th>
-              <th>Quantity</th>
-              <th>Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item, idx) => (
-              <tr key={idx}>
-                <td>{item.product.name}</td>
-                <td>₹{item.product.price}</td>
-                <td>{item.quantity}</td>
-                <td>₹{item.product.price * item.quantity}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       )}
 
-      {items.length > 0 && (
+      {!loading && !error && cartItems.length > 0 && (
         <>
-          <h3 className="text-right mt-4">Total: ₹{total}</h3>
-          <div className="text-center mt-4">
-            <button className="btn btn-success">
-              Proceed to Payment 💳
-            </button>
+          <table className="cart-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price (₹)</th>
+                <th>Subtotal (₹)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cartItems.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.product.name}</td>
+                  <td>{item.quantity}</td>
+                  <td>₹{item.product.price}</td>
+                  <td>₹{item.quantity * item.product.price}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="cart-summary text-right mt-4">
+            <h3>Total: ₹{totalAmount}</h3>
+            <button className="btn btn-primary mt-2">Proceed to Pay</button>
           </div>
         </>
       )}

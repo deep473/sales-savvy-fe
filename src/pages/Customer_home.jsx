@@ -6,13 +6,10 @@ export default function Customer_home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading]   = useState(true);
   const [error, setError]       = useState("");
+  const [search, setSearch]     = useState("");
 
   const navigate = useNavigate();
 
-  /* (optional) simple text search */
-  const [search, setSearch]     = useState("");
-
-  /* ------------------------------------------------------------------ */
   useEffect(() => {
     (async () => {
       try {
@@ -27,7 +24,6 @@ export default function Customer_home() {
     })();
   }, []);
 
-  /* add-to-cart handler ------------------------------------------------ */
   async function handleAddToCart(product, qty = 1) {
     const username = localStorage.getItem("username");
     if (!username) return alert("Please sign in first");
@@ -48,20 +44,16 @@ export default function Customer_home() {
     }
   }
 
-  /* live search filter (you can remove if not needed) */
   const filtered = products.filter((p) =>
     (p.name + p.description)
       .toLowerCase()
       .includes(search.toLowerCase())
   );
 
-  /* ------------------------------------------------------------------ */
   return (
     <section className="customer-home">
-
-      {/* hero / headline */}
       <header className="shop-header">
-        <h1 className="shop-title">Welcome to Sales&nbsp;Savvy</h1>
+        <h1 className="shop-title">Welcome to Sales Savvy</h1>
         <p className="shop-tagline">
           Discover curated deals, fresh arrivals and lightning-fast delivery.
           Scroll down to start shopping!
@@ -74,20 +66,20 @@ export default function Customer_home() {
           Go to Cart 🛒
         </button>
 
-        {/* Uncomment to enable search
+        {/*
         <input
           className="shop-search"
           type="text"
           placeholder="Search products…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-        /> */}
+        />
+        */}
       </header>
 
-      {/* catalogue */}
       <div className="container">
         {loading && <p className="text-center">Loading…</p>}
-        {error   && <p className="text-center">{error}</p>}
+        {error   && <p className="text-center text-danger">{error}</p>}
 
         {!loading && !error && (
           filtered.length ? (

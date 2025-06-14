@@ -45,7 +45,8 @@ export default function Add_product() {
   return (
     <>
       <h4>Add product below</h4>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} >
+      <div className="form-group">
         <label>Name: </label>
         <input
           type="text"
@@ -53,8 +54,9 @@ export default function Add_product() {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <br /><br />
-
+      </div>
+        
+        <div className="form-group">
         <label>Description: </label>
         <input
           type="text"
@@ -62,8 +64,8 @@ export default function Add_product() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <br /><br />
-
+        </div>
+        <div className="form-group">
         <label>Price: </label>
         <input
           type="text"
@@ -71,8 +73,8 @@ export default function Add_product() {
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
-        <br /><br />
-
+        </div>
+        <div className="form-group">
         <label>Photo: </label>
         <input
           type="text"
@@ -80,8 +82,8 @@ export default function Add_product() {
           value={photo}
           onChange={(e) => setPhoto(e.target.value)}
         />
-        <br /><br />
-
+        </div>
+        <div className="form-group">
         <label>Category: </label>
         <input
           type="text"
@@ -89,9 +91,8 @@ export default function Add_product() {
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         />
-        <br /><br />
-
-        <button type="submit">Add Product</button>
+        </div>
+        <button type="submit" className="btn btn-primary">Add Product</button>
       </form>
     </>
   );
